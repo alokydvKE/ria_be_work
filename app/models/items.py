@@ -1,7 +1,6 @@
 from sqlmodel import SQLModel, Field
 
 
-
 class Items(SQLModel, table =True):
     item_id: int | None = Field(default=None, primary_key=True)
     item_name: str
