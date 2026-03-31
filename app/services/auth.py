@@ -1,44 +1,33 @@
 from jose import jwt  
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+from fastapi import HTTPException, Depends
 import os 
-
 from passlib.context import CryptContext
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from app.utils.db import SessionLocal
+from app.models.roles import UserRole, Role
 
 
 load_dotenv()
 
 ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
-SECRET_KEY=os.getenv('SECRET_KEY')
-ALGORITHM=os.getenv('ALGORITHM')
+SECRET_KEY = os.getenv('SECRET_KEY')
+ALGORITHM = os.getenv('ALGORITHM')
 
-
-print(ACCESS_TOKEN_EXPIRE_MINUTES)
-print(SECRET_KEY)
-print(ALGORITHM)
-
-def create_token(data:dict):
+def create_token(data: dict):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-def verify_token(token :str):
+def verify_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload 
     except:
         return None
 
-'''
-token = create_access_token({"user_id":1})
-print (token)
-
-data = verify_access_token(token)
-print(data)
-'''
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_password(password: str):
@@ -46,3 +35,41 @@ def hash_password(password: str):
 
 def verify_password(plain: str, hashed: str):
     return pwd_context.verify(plain, hashed)
+
+security = HTTPBearer()
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    payload = verify_token(token)
+
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    permissions = get_user_permissions(payload.get("user_id"))
+
+    return {
+        "user_id": payload.get("user_id"),
+        "email": payload.get("email"),
+        **permissions
+    }
+
+def get_user_permissions(user_id: int) -> dict:
+    db = SessionLocal()
+    try:
+        user_role = db.query(UserRole).filter(UserRole.user_id == user_id).first()
+
+        if not user_role:
+            return {"can_edit": False, "can_add": False, "can_delete": False}
+
+        role = db.query(Role).filter(Role.role_id == user_role.role_id).first()
+
+        if not role:
+            return {"can_edit": False, "can_add": False, "can_delete": False}
+
+        return {
+            "can_edit": bool(role.can_edit),
+            "can_add": bool(role.can_add),
+            "can_delete": bool(role.can_delete),
+        }
+    finally:
+        db.close()
