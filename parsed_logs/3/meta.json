@@ -1,0 +1,44 @@
+{
+  "project_id": 3,
+  "parsed_files": {
+    "2026-04-20_2.txt": {
+      "lines_parsed": 228,
+      "parsed_at": "2026-04-21T14:33:27.490216",
+      "first_ts": null,
+      "last_ts": null,
+      "mtime": 1776765282.2370102,
+      "detected_fmt": "delimited",
+      "done": true
+    }
+  },
+  "column_map": {},
+  "skipped_files": [
+    {
+      "file": "2026-04-20.log",
+      "reason": "filename must follow YYYY-MM-DD_N.log format"
+    },
+    {
+      "file": "2026-04-21.log",
+      "reason": "filename must follow YYYY-MM-DD_N.log format"
+    }
+  ],
+  "total_entries": 228,
+  "last_sync": "2026-04-21T14:33:27.495511",
+  "detected_columns": [
+    "timestamp",
+    "level",
+    "message",
+    "col_0",
+    "col_1",
+    "col_2",
+    "col_3",
+    "col_4",
+    "col_5",
+    "col_6",
+    "col_7",
+    "col_8"
+  ],
+  "prev_columns": [],
+  "format_changed": false,
+  "format_warnings": []
+}

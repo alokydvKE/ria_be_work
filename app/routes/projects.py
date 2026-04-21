@@ -95,6 +95,7 @@ from sqlmodel import Session, select
 from app.database import engine
 from app.models.projects import Projects, ProjectCreate
 from app.services.auth import get_current_user
+from datetime import datetime, date
 
 router = APIRouter()
 
@@ -122,7 +123,7 @@ def create_project(project: ProjectCreate, user=Depends(get_current_user)):
             end_date=project.end_date,
             is_live=project.is_live,
             is_archived=False,
-            is_deleted=False
+            is_deleted=False,
         )
         session.add(new_project)
         session.commit()
