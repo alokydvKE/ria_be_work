@@ -1,0 +1,48 @@
+{
+  "project_id": 3,
+  "parsed_files": {
+    "2026-04-23_1.log": {
+      "lines_parsed": 17,
+      "parsed_at": "2026-04-30T06:45:20.829491",
+      "first_ts": "2026-04-21T13:14:36",
+      "last_ts": null,
+      "mtime": 1776925251.739974,
+      "detected_fmt": "delimited",
+      "done": true
+    }
+  },
+  "column_map": {
+    "col_9": "payload"
+  },
+  "skipped_files": [],
+  "total_entries": 17,
+  "last_sync": "2026-04-30T06:59:23.740732",
+  "detected_columns": [
+    "timestamp",
+    "level",
+    "message",
+    "col_1",
+    "col_2",
+    "col_4",
+    "col_6",
+    "col_7",
+    "col_8",
+    "col_9",
+    "col_10"
+  ],
+  "prev_columns": [
+    "timestamp",
+    "level",
+    "message",
+    "col_1",
+    "col_2",
+    "col_4",
+    "col_6",
+    "col_7",
+    "col_8",
+    "col_9",
+    "col_10"
+  ],
+  "format_changed": false,
+  "format_warnings": []
+}
